@@ -178,6 +178,18 @@ static int initialized_or_any_threads;
 typedef int (*trylock_func_t) (void *);
 
 #ifndef HAVE_PTHREAD_MUTEX_TIMEDLOCK
+#define REQUIRE_THE_BUSY_WAIT_FOR_IMPLEMENTATION 1
+#endif
+
+#if !HAVE_PTHREAD_RWLOCK_TIMEDRDLOCK && HAVE_PTHREAD_RWLOCK_TRYRDLOCK
+#define REQUIRE_THE_BUSY_WAIT_FOR_IMPLEMENTATION 1
+#endif
+
+#if !HAVE_PTHREAD_RWLOCK_TIMEDWRLOCK && HAVE_PTHREAD_RWLOCK_TRYWRLOCK
+#define REQUIRE_THE_BUSY_WAIT_FOR_IMPLEMENTATION 1
+#endif
+
+#if REQUIRE_THE_BUSY_WAIT_FOR_IMPLEMENTATION
 static int
 busy_wait_for (trylock_func_t trylock, void *lock,
 	       const struct timespec *abstime)
