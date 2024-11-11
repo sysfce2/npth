@@ -1040,7 +1040,7 @@ npth_cond_signal (npth_cond_t *cond)
   if (err)
     return err;
 
-  if ((*cond)->waiter == INVALID_THREAD_ID)
+  if ((*cond)->waiter == NULL)
     return 0;
 
   /* Dequeue the first thread and wake it up.  */
@@ -1078,7 +1078,7 @@ npth_cond_broadcast (npth_cond_t *cond)
   if (err)
     return err;
 
-  if ((*cond)->waiter == INVALID_THREAD_ID)
+  if ((*cond)->waiter == NULL)
     return 0;
 
   while ((*cond)->waiter)
