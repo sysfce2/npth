@@ -264,7 +264,7 @@ new_thread (npth_t *thread_id)
     return errno;
 
   thread->refs = 1;
-  thread->handle = INVALID_HANDLE_VALUE;
+  thread->handle = NULL;
   thread->detached = 0;
   thread->start_routine = NULL;
   thread->start_arg = NULL;
@@ -272,7 +272,7 @@ new_thread (npth_t *thread_id)
   thread->prev_ptr = NULL;
   /* We create the event when it is first needed (not all threads wait
      on conditions).  */
-  thread->event = INVALID_HANDLE_VALUE;
+  thread->event = NULL;
   memset (thread->name, '\0', sizeof (thread->name));
 
   thread_table[id] = thread;
@@ -289,6 +289,9 @@ free_thread (npth_t thread_id)
 
   if (thread->handle)
     CloseHandle (thread->handle);
+
+  if (thread->event)
+    CloseHandle (thread->event);
 
   /* Unlink the thread from any condition waiter queue.  */
   dequeue_thread (thread);
@@ -1132,10 +1135,10 @@ npth_cond_wait (npth_cond_t *cond, npth_mutex_t *mutex)
     return err;
 
   /* Ensure there is an event.  */
-  if (thread->event == INVALID_HANDLE_VALUE)
+  if (thread->event == NULL)
     {
       thread->event = CreateEvent (NULL, TRUE, FALSE, NULL);
-      if (thread->event == INVALID_HANDLE_VALUE)
+      if (thread->event == NULL)
 	return map_error (GetLastError());
     }
 
@@ -1224,10 +1227,10 @@ npth_cond_timedwait (npth_cond_t *cond, npth_mutex_t *mutex,
     return err;
 
   /* Ensure there is an event.  */
-  if (thread->event == INVALID_HANDLE_VALUE)
+  if (thread->event == NULL)
     {
       thread->event = CreateEvent (NULL, TRUE, FALSE, NULL);
-      if (thread->event == INVALID_HANDLE_VALUE)
+      if (thread->event == NULL)
 	return map_error (GetLastError());
     }
 
@@ -1783,7 +1786,7 @@ npth_eselect(int nfd, fd_set *rfds, fd_set *wfds, fd_set *efds,
   int nr_obj = 0;
   /* Number of extra events.  */
   int nr_events = 0;
-  HANDLE sock_event = INVALID_HANDLE_VALUE;
+  HANDLE sock_event = NULL;
   int res;
   DWORD ret;
   SOCKET fd;
@@ -1853,7 +1856,7 @@ npth_eselect(int nfd, fd_set *rfds, fd_set *wfds, fd_set *efds,
      return an error.  */
 
   sock_event = WSACreateEvent ();
-  if (sock_event == INVALID_HANDLE_VALUE)
+  if (sock_event == NULL)
     {
       err = EINVAL;
       return -1;
@@ -1988,7 +1991,7 @@ npth_eselect(int nfd, fd_set *rfds, fd_set *wfds, fd_set *efds,
 
   /* Cleanup.  */
  err_out:
-  if (sock_event != INVALID_HANDLE_VALUE)
+  if (sock_event != NULL)
     {
       for (i = 0; i < nr_fdobj; i++)
 	{
