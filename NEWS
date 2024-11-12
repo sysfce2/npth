@@ -1,10 +1,18 @@
-Noteworthy changes in version 1.8 (unreleased)  [C2/A2/R_]
+Noteworthy changes in version 1.8 (2024-11-12)  [C3/A3/R0]
 ----------------------------------------------
 
  * Fix npth_cond_signal and npth_cond_broadcast on Windows.  [T7386]
 
  * New function npth_get_version.  New macros NPTH_VERSION and
    NPTH_VERSION_NUMBER.
+
+ * Fix INSERT_EXPOSE_RWLOCK_API for musl C library.  [T5664]
+
+ * Add fallback implementation for POSIX semaphore API on macOS.
+   [T7057]
+
+ * Return a run-time error if npth_rwlock_timedrdlock is not
+   supported.  [T7109]
 
  Release-info: https://dev.gnupg.org/T7387
 
