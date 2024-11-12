@@ -2008,3 +2008,7 @@ npth_eselect(int nfd, fd_set *rfds, fd_set *wfds, fd_set *efds,
   errno = err;
   return -1;
 }
+
+/* Include that simple function from the Unix version. */
+#include "../src/getversion.c"
+/* end of file */

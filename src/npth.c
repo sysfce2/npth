@@ -892,3 +892,7 @@ npth_clock_gettime (struct timespec *ts)
 # error clock_gettime not available - please provide a fallback.
 #endif
 }
+
+
+#include "getversion.c"
+/* end of file */

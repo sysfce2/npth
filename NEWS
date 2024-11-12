@@ -1,6 +1,13 @@
 Noteworthy changes in version 1.8 (unreleased)  [C2/A2/R_]
 ----------------------------------------------
 
+ * Fix npth_cond_signal and npth_cond_broadcast on Windows.  [T7386]
+
+ * New function npth_get_version.  New macros NPTH_VERSION and
+   NPTH_VERSION_NUMBER.
+
+ Release-info: https://dev.gnupg.org/T7387
+
 
 Noteworthy changes in version 1.7 (2024-02-23)  [C2/A2/R0]
 ----------------------------------------------

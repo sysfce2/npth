@@ -46,7 +46,9 @@ m4_define([mym4_isbeta],       m4_argn(2, mym4_verslist))
 m4_define([mym4_version],      m4_argn(4, mym4_verslist))
 m4_define([mym4_revision],     m4_argn(7, mym4_verslist))
 m4_define([mym4_revision_dec], m4_argn(8, mym4_verslist))
+m4_define([mym4_commitid],     m4_argn(9, mym4_verslist))
 m4_esyscmd([echo ]mym4_version[>VERSION])
+m4_esyscmd([echo ]mym4_commitid[>>VERSION])
 AC_INIT([mym4_package],[mym4_version],[https://bugs.gnupg.org])
 # LT Version numbers, remember to change them just *before* a release.
 #   (Code changed:			REVISION++)
@@ -267,17 +269,20 @@ fi
 AM_CONDITIONAL(HAVE_W64_SYSTEM, test "$have_w64_system" = yes)
 
 #
-# Generate values for the DLL version info
+# Provide information about the build.
 #
-if test "$have_w32_system" = yes; then
-    BUILD_ISODATE=`date --iso-8601`
-    changequote(,)dnl
-    BUILD_FILEVERSION=`echo "$VERSION" | sed 's/\([0-9.]*\).*/\1./;s/\./,/g'`
-    changequote([,])dnl
-    BUILD_FILEVERSION="${BUILD_FILEVERSION}git_revision_dec"
-fi
+BUILD_REVISION="mym4_revision"
+AC_SUBST(BUILD_REVISION)
+BUILD_ISODATE=`date --iso-8601`
 AC_SUBST(BUILD_ISODATE)
+changequote(,)dnl
+BUILD_VERSION=`echo "$PACKAGE_VERSION" | sed 's/\([0-9.]*\).*/\1./'`
+changequote([,])dnl
+BUILD_VERSION="${BUILD_VERSION}0.mym4_revision_dec"
+BUILD_FILEVERSION=`echo "${BUILD_VERSION}" | tr . ,`
+AC_SUBST(BUILD_VERSION)
 AC_SUBST(BUILD_FILEVERSION)
+
 AC_ARG_ENABLE([build-timestamp],
   AS_HELP_STRING([--enable-build-timestamp],[set an explicit build timestamp for reproducibility.
                   (default is the current time in ISO-8601 format)]),
@@ -290,6 +295,12 @@ AC_ARG_ENABLE([build-timestamp],
 AC_SUBST(BUILD_TIMESTAMP)
 AC_DEFINE_UNQUOTED(BUILD_TIMESTAMP, "$BUILD_TIMESTAMP",
                    [The time this package was configured for a build])
+BUILD_COMMITID="mym4_commitid"
+AC_DEFINE_UNQUOTED(BUILD_COMMITID, "$BUILD_COMMITID",
+                   [Git commit id used to build this package])
+
+VERSION_NUMBER=m4_esyscmd(printf "0x%02x%02x00" mym4_major mym4_minor)
+AC_SUBST(VERSION_NUMBER)
 
 
 #
@@ -448,6 +459,14 @@ AC_SUBST(NPTH_CONFIG_LIBS)
 AC_SUBST(NPTH_CONFIG_CFLAGS)
 AC_SUBST(NPTH_CONFIG_HOST)
 
+
+AH_BOTTOM([
+#define CRIGHTBLURB "Copyright (C) 2011, 2012, 2014, 2015, 2017, 2024" \
+                    " g10 Code GmbH\n"
+])
+
+
+
 #
 # Last check.
 #
@@ -478,8 +497,10 @@ fi
 AC_CONFIG_FILES([Makefile
 npth.pc
 src/npth.h
+w32/npth.h
 src/Makefile
 w32/Makefile
+w32/versioninfo.rc
 tests/Makefile])
 AC_CONFIG_FILES(npth-config, chmod +x npth-config)
 AC_OUTPUT

@@ -49,14 +49,14 @@ install-def-file:
 uninstall-def-file:
 	-rm $(DESTDIR)$(libdir)/npth.def
 
-gpgme_deps = $(gpgme_res) npth.def
+npth_deps = $(npth_res) npth.def
 
 
 libnpth_la_LDFLAGS = $(no_undefined) $(export_symbols) $(extra_ltoptions) \
 	-version-info \
 	@LIBNPTH_LT_CURRENT@:@LIBNPTH_LT_REVISION@:@LIBNPTH_LT_AGE@
 libnpth_la_DEPENDENCIES = $(npth_deps)
-libnpth_la_LIBADD = @NETLIBS@
+libnpth_la_LIBADD = $(npth_res) @NETLIBS@
 
 install-data-local: install-def-file
 

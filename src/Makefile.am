@@ -18,7 +18,7 @@
 
 ## Process this file with automake to produce Makefile.in
 
-EXTRA_DIST = libnpth.vers
+EXTRA_DIST = libnpth.vers  getversion.c
 #	     versioninfo.rc.in
 nodist_include_HEADERS = npth.h
 
@@ -75,4 +75,3 @@ libnpth_la_DEPENDENCIES = $(srcdir)/libnpth.vers $(npth_deps)
 install-data-local: install-def-file
 
 uninstall-local: uninstall-def-file
-

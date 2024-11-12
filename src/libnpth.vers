@@ -63,6 +63,7 @@ NPTH_1.0 {
     npth_poll;
     npth_ppoll;
 
+    npth_get_version;
 
   local:
     *;

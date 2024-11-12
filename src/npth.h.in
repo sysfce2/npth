@@ -1,6 +1,6 @@
 /* npth.h - a lightweight implementation of pth over pthread.
  *          Configured for: @NPTH_CONFIG_HOST@.
- * Copyright (C) 2011, 2012, 2015, 2017 g10 Code GmbH
+ * Copyright (C) 2011, 2012, 2015, 2017, 2024 g10 Code GmbH
  *
  * This file is part of nPth.
  *
@@ -67,6 +67,12 @@ extern "C" {
 }
 #endif
 #endif
+
+/* The version and the version number of this header should match the
+ * one of the library.  Use the latter in your application to test for
+ * minor API changes.  Use npth_get_version for the lib version.  */
+#define NPTH_VERSION "@PACKAGE_VERSION@"
+#define NPTH_VERSION_NUMBER @VERSION_NUMBER@
 
 
 
@@ -361,6 +367,9 @@ void npth_protect (void);
 /* If you run into problems with the above calls, this function can be
  * used to examine in which state nPth is.  */
 int npth_is_protected (void);
+
+/* Return the version of the library.  WHAT is in general NULL. */
+const char *npth_get_version (const char *what);
 
 
 /* Because the timed functions work on timespec, we provide a clock

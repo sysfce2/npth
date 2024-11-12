@@ -79,5 +79,6 @@ EXPORTS
     npth_unprotect			@59
     npth_protect			@60
     npth_is_protected                   @61
+    npth_get_version                    @62
 
 ; END

@@ -1,5 +1,5 @@
 /* npth.h - a lightweight implementation of pth over native threads
- * Copyright (C) 2011, 2015 g10 Code GmbH
+ * Copyright (C) 2011, 2015, 2024 g10 Code GmbH
  *
  * This file is part of nPth.
  *
@@ -34,6 +34,13 @@ extern "C" {
 }
 #endif
 #endif
+
+/* The version and the version number of this header should match the
+ * one of the library.  Use the latter in your application to test for
+ * minor API changes.  Use npth_get_version for the lib version.  */
+#define NPTH_VERSION "@PACKAGE_VERSION@"
+#define NPTH_VERSION_NUMBER @VERSION_NUMBER@
+
 
 struct msghdr;
 
@@ -182,6 +189,11 @@ void npth_protect (void);
  * problems with npth_unprotect and npth_protect.  */
 int npth_is_protected (void);
 
+/* Return the version of the library.  WHAT is in general NULL. */
+const char *npth_get_version (const char *what);
+
+/* Because the timed functions work on timespec, we provide a clock
+   interface for convenience and portability.  */
 int npth_clock_gettime(struct timespec *tp);
 
 /* CMP may be ==, < or >.  Do not use <= or >=.  */
