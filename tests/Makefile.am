@@ -18,7 +18,7 @@
 
 ## Process this file with automake to produce Makefile.in
 
-TESTS = t-mutex t-thread
+TESTS = t-mutex t-thread t-cond
 XFAIL_TESTS =
 
 if HAVE_W32_SYSTEM
